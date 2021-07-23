@@ -1,31 +1,28 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-6">
-        <div class="card card-default">
-          <div class="card-header">New Password</div>
-          <div class="card-body">
-            <!-- <ul v-if="errors">
-              <li v-for="error in errors" v-bind:key="error"> msg </li>
-            </ul> -->
-            <form autocomplete="off" @submit.prevent="resetPassword" method="post">
-              <div class="form-group">
-                  <label for="email">E-mail</label>
-                  <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
-              </div>
-              <div class="form-group">
-                  <label for="email">Password</label>
-                  <input type="password" id="password" class="form-control" placeholder="" v-model="password" required>
-              </div>
-              <div class="form-group">
-                  <label for="email">Confirm Password</label>
-                  <input type="password" id="password_confirmation" class="form-control" placeholder="" v-model="password_confirmation" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Update</button>
-            </form>
+  <div class="reset_password">
+    <h1 class="center">Нова парола</h1>
+    <div class="card-body">
+      <form autocomplete="off" @submit.prevent="resetPassword" method="post" class="center">
+        <div class="input_holder">
+          <div class="wrap_elements">
+            <span class="material-icons">email</span>
+            <input type="email" name="email" placeholder="Въведете вашият имейл" v-model="email">
           </div>
         </div>
-      </div>
+        <div class="input_holder">
+          <div class="wrap_elements">
+            <span class="material-icons">https</span>
+            <input type="password" name="password" placeholder="Парола" v-model="password">
+          </div>
+        </div>
+        <div class="input_holder">
+          <div class="wrap_elements">
+            <span class="material-icons">https</span>
+            <input type="password" name="password_confirmation" placeholder="Повторете паролата" v-model="password_confirmation">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Обновяване</button>
+      </form>
     </div>
   </div>
 </template>
@@ -38,7 +35,6 @@ export default {
         email: null,
         password: null,
         password_confirmation: null,
-        has_error: false,
       }
     },
     methods: {
@@ -46,12 +42,14 @@ export default {
           axios.post( '/api'+window.location.pathname,{token: this.$route.params.token,
             email: this.email,
             password: this.password,
-            password_confirmation: this.password_confirmation}).then((res) => {
+            password_confirmation: this.password_confirmation
+          })
+          .then((res) => {
+            this.$store.commit('set_notification',res.data.notification)
             this.$router.push({name: 'Login'})
-          }).catch((error) => {
-            console.log(error);
-            console.log(error.response.data.error.custom_message);
-
+          })
+          .catch((error) => {
+            this.$store.commit('set_notification',error.response.data.notification)
           })
         }
     }

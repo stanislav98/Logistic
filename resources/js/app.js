@@ -20,10 +20,10 @@ import Echo from 'laravel-echo';
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'AIzaSyB-tj8rRknadmbisH_GehEwUhlcj0AMJT4',
-    libraries: 'places,geometry',
-  }
+	load: {
+		key: 'AIzaSyB-tj8rRknadmbisH_GehEwUhlcj0AMJT4',
+		libraries: 'places,geometry',
+	},
 });
 
 

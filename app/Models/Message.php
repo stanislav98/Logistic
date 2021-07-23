@@ -29,14 +29,19 @@ class Message extends Model
 
 	protected $casts = [
 		'sender_id' => 'int',
-		'reciever_id' => 'int'
+		'reciever_id' => 'int',
+		// 'created_at' => 'date:Y-m-d',
 	];
 
 	protected $fillable = [
 		'message',
 		'sender_id',
-		'reciever_id'
+		'reciever_id',
+		'status'
 	];
+	
+	// protected $dateFormat = 'Y-m-d';
+
 
 	public function user()
 	{

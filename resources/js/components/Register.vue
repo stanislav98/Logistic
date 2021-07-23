@@ -17,7 +17,7 @@
 		      <ul class="progressbar">
 		          <li :class="{ 'active' : form.step >= 0}">Информация</li>
 		          <li :class="{ 'active' : form.step >= 1}">Автопарк</li>
-		          <li :class="{ 'active' : form.step >= 2}">Плащане</li>
+		          <li :class="{ 'active' : form.step >= 2}">Условия</li>
 			  </ul>
 			</div>
 			<div class="form_wrapper" v-if="form.step == 0">
@@ -132,7 +132,7 @@
 			},
 		},
 		created() {
-			axios.post('api/vehicles').then((res) => {
+			axios.get('api/vehicles').then((res) => {
 				let vehicles = res.data.vehicles;
 				vehicles.forEach(function(i) {
 					i.count = 0;

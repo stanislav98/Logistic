@@ -1,8 +1,6 @@
 <template>
 	<div class="invoices_wrap">
-		<div class="card_box" 
-			
-			>
+		<div class="card_box">
 			<div class="card">
 				<div class="table_header">
 					<span>№</span>
@@ -41,13 +39,10 @@
 		    plans () {
 		        return this.$store.state.plans
 		    },
-		    invoices () {
-		    	return this.$store.state.invoices
-		    }
 		},
 		data() {
 			return {
-				// invoices: []
+				invoices: []
 	        }
 		},
 		created() {
@@ -58,9 +53,9 @@
 	    		console.log("will make call")
 	            axios.get(`/api/invoices/${this.firm.id}`).then((res) => {
 	            	const invoices = res.data.invoices;
-	            	this.$store.commit('set_invoices',invoices)
+	            	this.invoices = invoices
 				}).catch((error) => {
-					console.log(error)
+					this.$store.commit('set_notification',error.response.data.notification)
 				})
 			}
         },

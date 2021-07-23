@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Carbon\Carbon;
+
 
 class RegisterController extends Controller
 {
-    public function register(Request $request) {
-
-
+    public function register(Request $request) 
+    {
         DB::transaction(function() use ($request) {
             $company_id = DB::table('firms')->insertGetId([
                 'name' => 'Име на фирма',
@@ -29,35 +30,23 @@ class RegisterController extends Controller
                 'has_payed' => true,
                 'company_id' => $company_id,
                 'phone_number' => $request->phone_number,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
 
             //insert with same id
             DB::table('users')->where('id',$user_id)->update(array('owner_id' => $user_id));
 
-            $vehicles = [];
             foreach($request->vehicles as $k => $v) {
-                $vehicle_id = 0;
-                if($k == 'cist') {
-                    $vehicle_id = 2;
-                } else if ($k == 'gond') {
-                    $vehicle_id = 3;
-                } else if ($k == 'hlad') {
-                    $vehicle_id = 1;
-                } else if ($k == 'megat') {
-                    $vehicle_id = 4;
-                } else if ($k == 'vlek') {
-                    $vehicle_id = 5;
-                }
-                if(!empty($v)) {
-                    $vehicles[] = [
+                if($v['disabled'] == 1) {
+                    DB::table('company_vehicles')->insert([
                         'company_id' => $company_id,
-                        'vehicles_id' => $vehicle_id,
-                        'count' => $v,
-                    ];
+                        'vehicles_id' => $v['id'],
+                        'count' => $v['count'],
+                    ]);
                 }
             }
 
-            DB::table('company_vehicles')->insert($vehicles);
 
         });
 

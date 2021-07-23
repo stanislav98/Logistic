@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class NextStepValidator extends Controller
 {	
 	public function nextStep(Request $request) {
-        //this is for first step
+        // this is for first step
         $step = $request->input('step');
         if($step == 0) {
       	 	 $rules = [

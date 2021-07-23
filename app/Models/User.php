@@ -46,7 +46,8 @@ class User extends Model implements
 	protected $casts = [
 		'owner_id' => 'int',
 		'company_id' => 'int',
-		'has_payed' => 'bool'
+		'has_payed' => 'bool',
+		'role_id' => 'int'
 	];
 
 	protected $hidden = [
@@ -62,7 +63,8 @@ class User extends Model implements
 		'owner_id',
 		'phone_number',
 		'company_id',
-		'has_payed'
+		'has_payed',
+		'role_id'
 	];
 
 	public function firm()

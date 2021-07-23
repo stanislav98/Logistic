@@ -13,7 +13,19 @@ class VehiclesController extends Controller
     //GET 
     public function getVehicles(Request $request) {
   	 	$vehicles = Vehicle::all();
-  		return json_encode(['msg' => 'succes call', 'vehicles' => $vehicles]);
+
+      if($vehicles) {
+  		  return json_encode(['msg' => 'succes call', 'vehicles' => $vehicles]);
+      }
+
+      return response()->json(
+          ['notification' => 
+            [
+              'msg' => 'Успешно заплатихте абонамента си!' ,
+              'type' => 1, 
+              'active' => 1
+            ] 
+          ], 422);
     }
 
     //POST method
@@ -23,6 +35,10 @@ class VehiclesController extends Controller
     //DELETE method
 
 
+    /**
+     * GET METHOD
+     * Get all vehicles by firm ID !
+     */
     public function getVehiclesByCompany(Request $request) {
     	$firm = Firm::find($request->id);
       $vehicles = DB::select(

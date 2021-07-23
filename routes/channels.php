@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
-Broadcast::channel('privatechat.{id}', function ($user) {
-   return $user;
+Broadcast::channel('privatechat.{id}', function ($user, $id) {
+   return (int) $user->id === (int) $id;
 });
 
 // Broadcast::channel('online', function ($user) {
@@ -27,5 +27,5 @@ Broadcast::channel('privatechat.{id}', function ($user) {
 
 // Broadcast::channel('online', function ($user,$id) {
 Broadcast::channel('online', function ($user) {
-    return  $user;
+    return $user;
 });

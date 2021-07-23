@@ -26,21 +26,19 @@ class PaymentController extends Controller
 
     public function processSubscription(Request $request)
     {
-       $firm = Firm::find($request->firm['id']);
-       $paymentMethod = $request->paymentMethod;        
-       $firm->createOrGetStripeCustomer();
-
-       try {
-
-          $firm->newSubscription(
+      $firm = Firm::find($request->firm['id']);
+      $paymentMethod = $request->paymentMethod;        
+      $firm->createOrGetStripeCustomer();
+      try {
+        $firm->newSubscription(
           $request->plan['product']['name'], $request->plan['id']
-          )->create($paymentMethod['id']);
-           return response()->json(['notification' => ['msg' => 'Успешно заплатихте абонамента си!' , 'type' => 1, 'active' => 1] 
-            ],200);
-       } catch (\Exception $e) {
-            return response()->json(['notification' => ['msg' => 'Неуспешно плащане. Моля опитайте по-късно!' , 'type' => 0, 'active' => 1] 
-            ],422);
-       }
+        )->create($paymentMethod['id']);
+         return response()->json(['notification' => ['msg' => 'Успешно заплатихте абонамента си!' , 'type' => 1, 'active' => 1] 
+          ],200);
+      } catch (\Exception $e) {
+          return response()->json(['notification' => ['msg' => 'Неуспешно плащане. Моля опитайте по-късно!' , 'type' => 0, 'active' => 1] 
+          ],422);
+      }
        
        
     }
@@ -48,6 +46,7 @@ class PaymentController extends Controller
     public function endSubscription(Request $request) {
     	$firm = Firm::find($request->firm['id']);
       try {
+        dd($firm->subscriptions()->get());
         $firm->subscriptions()->first()->cancel();
          return response()->json(['notification' => ['msg' => 'Успешно отказахте абонамента си!' , 'type' => 1, 'active' => 1] ],200);
       } catch (Exception $e) {
@@ -57,12 +56,25 @@ class PaymentController extends Controller
 
     public function getInvoices(Request $request) {
     	$firm = Firm::find($request->id);
+
       $invoices = [];
     	$invoices_object  = $firm->invoices();
+
       foreach($invoices_object  as $invoice) {
           array_push($invoices, $invoice->asStripeInvoice() );
       }
 
-    	return response()->json( ['invoices' => $invoices ],200);
+      if(!empty($invoices)) {
+        return response()->json( ['invoices' => $invoices ],200);
+      } else {
+        return response()->json(
+          ['notification' => 
+            [
+              'msg' => 'Все още нямате фактури' ,
+              'type' => 1, 
+              'active' => 1
+            ] 
+          ], 422);
+      }
     }
 }

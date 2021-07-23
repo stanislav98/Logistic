@@ -25,17 +25,25 @@ class ResetPassword extends Controller
      */
     public function reset(Request $request)
     {
-        //$request->validate($this->rules(), $this->validationErrorMessages());
-
-        $validator = Validator::make($request->all(), [
+        
+        $rules = [
             'token' => ['required', 'max:255'],
             'email' => ['required', 'email', 'max:255' ],
-            'password' => ['required', 'confirmed', 'min:8'],
-        ]);
+            'password' => ['required', 'confirmed', 'min:6'],
+        ];
+        $customMessages = [
+            'token.required' => 'Полето за име е задължително.',
+            'token.max' => 'Невалиден токън.',
+            'email.required' => 'Полето за имейл е задължително.',
+            'email.unique' => 'Вече съществува потребител с този имейл.',
+            'email.email' => 'Въведете валиден имейл адрес.',
+            'email.max' => 'Въведете валиден имейл адрес.',
+            'password.required' => 'Полето за парола е задължително.',
+            'password.confirmed' => 'Паролите не съвпадат.',
+            'password.min' => 'Използвайте минимум 6 символа за парола.',
+        ];
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
+        $this->validate($request,$rules,$customMessages);
 
         $response = $this->broker()->reset(
             $this->credentials($request), function ($user, $password) {
@@ -75,7 +83,14 @@ class ResetPassword extends Controller
      */
     protected function sendResetResponse(Request $request, $response)
     {
-        return response()->json(['success' => ["message" => trans($response)] ], 200);                          
+           return response()->json(
+            ['notification' => 
+                [
+                    'msg' => "Успешно обновихте паролата си" ,
+                    'type' => 1, 
+                    'active' => 1
+                ] 
+            ], 200);                  
     }
 
     /**
@@ -87,9 +102,19 @@ class ResetPassword extends Controller
      */
     protected function sendResetFailedResponse(Request $request, $response)
     {
-        // return redirect()->back()
-        //             ->withInput($request->only('email'))
-        //             ->withErrors(['email' => trans($response)]);
-        return response()->json(['error' => ["message" => trans($response), "custom_message" => "Неуспешен опит за смяна на паролата!"] ], 422);            
+        $custom_message = "Неуспешен опит за смяна на паролата";
+        $transResponse = trans($response);
+        if($transResponse == "This password reset token is invalid.") {
+            $custom_message = "Токънът ви е изтекъл върнете се и генерирайте нов линк за подновяване!";
+        }
+        
+        return response()->json(
+            ['notification' => 
+                [
+                    'msg' => $custom_message ,
+                    'type' => 0, 
+                    'active' => 1
+                ] 
+            ], 422);           
     }
 }

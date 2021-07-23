@@ -1,20 +1,24 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-6">
-        <div class="card card-default">
-          <div class="card-header">Reset Password</div>
-          <div class="card-body">
-            <form autocomplete="off" @submit.prevent="requestResetPassword" method="post">
-              <div class="form-group">
-                  <label for="email">E-mail</label>
-                  <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Send Password Reset Link</button>
-            </form>
+  <div class="forgotten_password">
+    <h1>Забравена парола</h1>
+    <div class="free_content_message">
+      <p>Ако сте забравили своята парола</p>
+      <p>Може да използвате формата отдолу за да получите имейл</p>
+      <p>от където ще може да обновите паролата си</p>
+    </div>
+    <div class="forgot_password">
+      <form autocomplete="off" @submit.prevent="requestResetPassword" method="post">
+        <div class="input_holder" :class="{'error' : errors.email }">
+          <div class="wrap_elements">
+            <span class="material-icons">email</span>
+            <input type="email" name="email" placeholder="Въведете вашият имейл" v-model="email">
           </div>
+          <span class="error" v-if="errors.email">{{errors.email[0]}}</span>
         </div>
-      </div>
+        <div class="center">
+          <button type="submit" class="btn">Изпрати нова парола</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -24,16 +28,28 @@ export default {
     data() {
       return {
         email: "staskata1998@gmail.com",
-        has_error: false
+        errors: []
       }
     },
     methods: {
       requestResetPassword() {
         axios.post('/api/reset-password',{email: this.email}).then((res) => {
           this.response = res.data;
-          console.log(res);
+          const successObj = {
+              'msg': "Успешно беше изпратен линк на имейла ви!" ,
+              'type': 0, 
+              'active': 1
+            }
+            this.$store.commit('set_notification',err.response.data.notification)
         }).catch((error) => {
-          console.log(error);
+            const errors = err.response.data.errors
+            const msg = errors[Object.keys(errors)[0]][0]
+            const errorObj = {
+              'msg': msg ,
+                  'type': 0, 
+                  'active': 1
+            }
+            this.$store.commit('set_notification',err.response.data.notification)
         })
       }
     }

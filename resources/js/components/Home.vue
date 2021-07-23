@@ -3,15 +3,15 @@
 		<div class="left">
 			<router-link to="/"><img :src="'../images/logo_main.svg'"></router-link>
 			<div class="description">
-				<h1>Стани част от нашето семейство</h1>
-				<p><span>Е-Logistic</span> e интерактивен портал предназначен за транспортни и спедиторски компании. Имаш камион за транспорт и търсиш стока? Имаш стока за транспортиране и искаш да имаш по-голямо разнообразие от оферти за транспорт? Безспорно улесняване на работата и намаляване на разходите - с едно публикуване на офертата си, ще получите за кратко време достатъчно предложения или с едно бързо търсене можете да намерите подходящия товар или транспорт. Вече не е нужно да прелиствате справочници и тефтери и да прозвънявате по двеста фирми на ден всичко става онлайн на мига. Не чакай и се присъедини към нас!</p>
-				<div class="route_holder">
-					<!-- <a href="#" class="btn">Вход</a> -->
-					<!-- <a href="#" class="btn_second">Регистрация</a> -->
+				<about-us v-if="this.$router.app._route.path == '/'"></about-us>
+				<router-view></router-view>
+				<div class="route_holder" v-if="this.$router.app._route.path == '/'">
 					<router-link to="/login" class="btn">Вход</router-link>
 					<router-link to="/register" class="btn_second">Регистрация</router-link>
 				</div>
 			</div>
+			<home-footer></home-footer>
+			<pop-up-message></pop-up-message>
 		</div>
 		<div class="right">
 			<img :src="'../images/home_bg.svg'">
@@ -19,16 +19,16 @@
 	</div>
 </template>
 <script>
-	export default {
+	import AboutUs from './home/AboutUs.vue';
+	// import DashboardHeading from './DashboardHeading.vue';
+	import HomeFooter from './home/HomeFooter.vue';
+	import PopUpMessage from './PopUpMessage.vue';
 
+	export default {
+		components: {
+			AboutUs,
+			HomeFooter,
+			'pop-up-message': PopUpMessage,
+		}
 	}
 </script>
-<li><br></li>
-<li>Изцяло на български език и само за български фирми.<br></li>
-<li>Легитимността на всички регистрирани фирми е гарантирана от строгия контрол при регистрация.<br></li>
-<li>Високо ниво на сигурност и защита на личната информация.<br></li>
-<li>Лесна за използване и бърза комуникация между потребителите чрез лични съобщения, чат, интернет телефон, форуми ...<br></li>
-<li>Борса с най-висок рейтинг по актуалност и реалност на офертите.<br></li>
-<li>С над 1600 потребители онлайн в минута, шансовете за бързо намиране на товар или транспорт са много високи.<br></li>
-<li><br></ul>
-</blockquote>

@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 class PrivateMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    // use SerializesModels;
 
     public $message;
     /**
@@ -33,11 +34,12 @@ class PrivateMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('privatechat.'.$this->message->receiver_id);
+        return new PrivateChannel('private-privatechat.'.$this->message->reciever_id);
     }
 
-    // public function broadcastAs()
-    // {
-    //   return 'privatechat.'.$this->message->receiver_id;
-    // }
+    public function broadcastAs()
+    {
+      // return 'privatechat.'.$this->message->receiver_id;
+      return 'PrivateMessage';
+    }
 }

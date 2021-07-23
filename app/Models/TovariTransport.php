@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $type
  * @property Carbon $created_at
  * @property int $tov_trans_types
+ * @property int $user_id
  * @property int $firm_id
  * @property int $vehicle_type
  * @property float $from_lat
@@ -47,13 +48,17 @@ class TovariTransport extends Model
 		'fast_payment' => 'bool',
 		'adr' => 'bool',
 		'type' => 'bool',
+		'both_directions' => 'bool',
 		'tov_trans_types' => 'int',
+		'user_id' => 'int',
 		'firm_id' => 'int',
 		'vehicle_type' => 'int',
 		'from_lat' => 'float',
 		'from_lng' => 'float',
 		'to_lat' => 'float',
-		'to_lng' => 'float'
+		'to_lng' => 'float',
+		'description' => 'string',
+		'number_of_vehicles' => 'int'
 	];
 
 	protected $dates = [
@@ -70,6 +75,7 @@ class TovariTransport extends Model
 		'adr',
 		'type',
 		'tov_trans_types',
+		'user_id',
 		'firm_id',
 		'vehicle_type',
 		'from_lat',
@@ -77,18 +83,25 @@ class TovariTransport extends Model
 		'from_city',
 		'to_lat',
 		'to_lng',
-		'to_city'
+		'to_city',
+		'both_directions',
+		'number_of_vehicles'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
 	public function firm()
 	{
 		return $this->belongsTo(Firm::class);
 	}
 
-	public function tov_trans_type()
-	{
-		return $this->belongsTo(TovTransType::class, 'tov_trans_types');
-	}
+	// public function tov_trans_type()
+	// {
+	// 	return $this->belongsTo(TovTransType::class, 'tov_trans_types');
+	// }
 
 	public function vehicle()
 	{
